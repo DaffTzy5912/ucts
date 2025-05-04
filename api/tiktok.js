@@ -1,39 +1,35 @@
 const axios = require('axios');
-const cheerio = require('cheerio');
 
 module.exports = async (req, res) => {
   const { username } = req.query;
-  if (!username) return res.status(400).json({ error: 'Masukkan username' });
+  if (!username) {
+    return res.status(400).json({ error: 'Masukkan username TikTok' });
+  }
 
   try {
-    const response = await axios.get(`https://www.tiktok.com/@${username}`);
-    const html = response.data;
-    const $ = cheerio.load(html);
-    const scriptData = $('#__UNIVERSAL_DATA_FOR_REHYDRATION__').html();
-    const parsedData = JSON.parse(scriptData);
+    const apikey = 'ayakaviki'; // Ganti dengan API key kamu jika perlu
+    const result = await axios.get(`https://api.lolhuman.xyz/api/stalktiktok/${encodeURIComponent(username)}?apikey=${apikey}`);
+    const data = result.data;
 
-    const userDetail = parsedData.__DEFAULT_SCOPE__?.['webapp.user-detail'];
-    if (!userDetail) throw new Error('User tidak ditemukan');
+    if (data.status !== 200) {
+      return res.status(data.status).json({ error: `Gagal mengambil data dari API. Status code: ${data.status}` });
+    }
 
-    const userInfo = userDetail.userInfo?.user;
-    const stats = userDetail.userInfo?.stats;
+    const user = data.result;
 
     const metadata = {
-      id: userInfo?.id,
-      username: userInfo?.uniqueId,
-      nama: userInfo?.nickname,
-      avatar: userInfo?.avatarLarger,
-      bio: userInfo?.signature,
-      verifikasi: userInfo?.verified,
-      totalfollowers: stats?.followerCount,
-      totalmengikuti: stats?.followingCount,
-      totaldisukai: stats?.heart,
-      totalvideo: stats?.videoCount,
-      totalteman: stats?.friendCount,
+      username: user.username,
+      nickname: user.nickname,
+      bio: user.bio,
+      followers: user.followers,
+      followings: user.followings,
+      likes: user.likes,
+      video: user.video,
+      picture: user.user_picture
     };
 
     res.status(200).json(metadata);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
