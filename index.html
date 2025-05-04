@@ -6,12 +6,12 @@
   <title>TikTok Stalker</title>
   <style>
     body { font-family: sans-serif; padding: 20px; }
-    img { max-width: 100px; border-radius: 10px; }
+    img { max-width: 120px; border-radius: 12px; }
   </style>
 </head>
 <body>
   <h1>TikTok Stalker</h1>
-  <input type="text" id="username" placeholder="Masukkan username" />
+  <input type="text" id="username" placeholder="Masukkan username TikTok" />
   <button onclick="stalk()">Cari</button>
   <pre id="result"></pre>
 
@@ -30,15 +30,13 @@
 
       document.getElementById("result").innerHTML = `
 Username: ${data.username}
-Nama: ${data.nama}
+Nickname: ${data.nickname}
 Bio: ${data.bio}
-Followers: ${data.totalfollowers}
-Mengikuti: ${data.totalmengikuti}
-Disukai: ${data.totaldisukai}
-Video: ${data.totalvideo}
-Teman: ${data.totalteman}
-Verifikasi: ${data.verifikasi ? "Ya" : "Tidak"}
-Gambar: <br><img src="${data.avatar}" />
+Followers: ${data.followers}
+Following: ${data.followings}
+Likes: ${data.likes}
+Video: ${data.video}
+Foto Profil: <br><img src="${data.picture}" />
       `;
     }
   </script>
