@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TikTok Stalker</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    img { max-width: 100px; border-radius: 10px; }
+  </style>
+</head>
+<body>
+  <h1>TikTok Stalker</h1>
+  <input type="text" id="username" placeholder="Masukkan username" />
+  <button onclick="stalk()">Cari</button>
+  <pre id="result"></pre>
+
+  <script>
+    async function stalk() {
+      const username = document.getElementById("username").value.trim();
+      if (!username) return alert("Masukkan username");
+
+      const res = await fetch(`/api/tiktok?username=${username}`);
+      const data = await res.json();
+
+      if (data.error) {
+        document.getElementById("result").textContent = `Error: ${data.error}`;
+        return;
+      }
+
+      document.getElementById("result").innerHTML = `
+Username: ${data.username}
+Nama: ${data.nama}
+Bio: ${data.bio}
+Followers: ${data.totalfollowers}
+Mengikuti: ${data.totalmengikuti}
+Disukai: ${data.totaldisukai}
+Video: ${data.totalvideo}
+Teman: ${data.totalteman}
+Verifikasi: ${data.verifikasi ? "Ya" : "Tidak"}
+Gambar: <br><img src="${data.avatar}" />
+      `;
+    }
+  </script>
+</body>
+</html>
